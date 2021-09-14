@@ -1,0 +1,68 @@
+#code for generating array of bolt names
+#will try to keep database as simple as we can, any special bolts that arrive in the inventory can be changed accordingly
+#-------------------------------------Array build------------------------------
+fastener_array= ['B']
+size_array=['M1','M2','M3','M4','M5''M6','M7','M8','M10']
+material_array=['MS','SS304']
+head_array=['CSK','PAN','HEX']
+length_array=['2','3','4','5','6','7','8','9','10','11','12','15','16','18','20','22','25','30','35']
+opener_array=['PL','MIN','HEX']
+thread_array=['regular']
+l1= len(fastener_array)
+l2= len(size_array)
+l3= len(material_array)
+l4= len(head_array)
+l5= len(length_array)
+l6= len(opener_array)
+l7= len(thread_array)
+
+#-----------------------------------Variable build----------------------------
+i=0 #variable for the fastener
+j=0 #variable for the size
+k=0 #variable for the material
+l= 0 #variable for the head
+m=0 #variable for the length
+n=0 #variable for the opener
+o=0 #variable for the thread
+
+#-------------------------------------loop build-------------------------------
+name=[]
+bolt_database=[]
+for i in range (0,l1):
+    for j in range (0,l2):
+        for k in range (0,l3):
+            for l in range (0,l4):
+                for m in range (0,l5):
+                    for n in range (0,l6):
+                        for o in range (0,l7):
+                            name = fastener_array[i]+size_array[j]+material_array[k]+head_array[l]+length_array[m]+opener_array[n]+thread_array[o]
+                            bolt_database.append(name)
+print("loop has been updated")
+print("the number of named elements in the database is")
+print(len(bolt_database))
+#--------------------------------exporting data to csv file--------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#the data now needs to be exported to a csv file so that notion can directly extract it and store it in its library
+#If the data needs to be reviewed such as adding a material or adding a different size of bolts to the database
+#It will be saved again and notion will be updated again
+#at this moment though we might consider making the database in a sql environment as this will be a relatively large database
+#we might also make a query interface at this moment to facilitate user experience
+
+        
