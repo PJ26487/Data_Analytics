@@ -1,0 +1,127 @@
+#importing all the libraries
+import tweepy
+import json 
+import pandas as pd
+import datetime as dt
+import openpyxl 
+from tweepy import OAuthHandler
+from tweepy import API
+import time
+from pandas import Series, DataFrame
+#importing the natural language processing libraries 
+import nltk 
+import nltk.corpus
+from nltk import sent_tokenize, word_tokenize
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.corpus import stopwords
+from collections import Counter
+
+#import plotting libraries 
+import matplotlib.pyplot as plt
+import numpy as np
+import itertools
+#importing the spacy libraries 
+import spacy
+
+#storing the authentication information
+API_key= "jEgP947uP6SjfF6lWiirWpay5"
+API_key_secret= "kUh9bOu8p3QHP4B7EdS7P82kRKrqgrGduxUNoz7U786paqAdMD"
+bearer_token= "AAAAAAAAAAAAAAAAAAAAAEIzWQEAAAAAsSgp7qW3s1C8XxSOn8JTz3hb%2FtI%3D4KKFp81nQpOj823yYtDjc2gJJRK9h9mHElns4DyISGBm9Jpw9Y"
+access_token= "1465192196173221888-eI3hB1NlKnot9Hipd9QxyewirslwHH"
+access_token_secret= "vuziBVx2u5pknnTEB6kQwFrpBooXRj4EgncW2zZVDsniE"
+print("the keys have been saved")
+
+#Authentication 
+#AUTHENTICATE TO TWITTER
+auth = tweepy.OAuthHandler(API_key, API_key_secret)
+auth.set_access_token(access_token,access_token_secret)
+
+# test authentication
+api = tweepy.API(auth)
+api.verify_credentials()
+print("Authentication OK")
+
+#creating a query and scraping data from twitter
+text_query = 'home decor'
+count = 500
+
+try:
+    # Creation of query method using parameters
+    tweets = tweepy.Cursor(api.search ,q=text_query,lang='en').items(count)
+
+    # Pulling information from tweets iterable object
+    tweets_list = [[tweet.text] for tweet in tweets]
+
+    # Creation of dataframe from tweets list
+    # Add or remove columns as you remove tweet information
+    tweets_df = pd.DataFrame(tweets_list)
+    tweets_str= tweets_df.to_string() #converts the above dataframe to string
+    tweets_str=tweets_str.lower()
+except BaseException as e:
+    print('failed on_status,', str(e))
+    time.sleep(3)
+
+#remove punctuations from the string
+punctuations = '''!()-[]\{};:'"/,<>./?@#$%^&*_~]1234567890''' #list of all the punctuations we remove from the list
+tweets_str_mt = ""
+for char in tweets_str:
+    if char not in punctuations:
+        tweets_str_mt = tweets_str_mt + char
+        
+#creating the string into a list
+tweets_list_space= tweets_str_mt.split(" ")
+tweets_list_punc= []
+for i in tweets_list_space:
+  if i is not '':
+    tweets_list_punc.append(i)
+print(tweets_list_punc)
+
+#removing the stopwords from the list
+stop_str= "rt RT \n a about above across after afterwards again against all almost alone along already also although always am among amongst amoungst amount an and another any anyhow anyone anything anyway anywhere are around as at back be became because become becomes becoming been before beforehand behind being below beside besides between beyond bill both bottom but by call can cannot cant co computer con could couldnt cry de describe detail do done down due during each eg eight either eleven else elsewhere empty enough etc even ever every everyone everything everywhere except few fifteen fify fill find fire first five for former formerly forty found four from front full further get give go had has hasnt have he hence her here hereafter hereby herein hereupon hers herse him himse his how however hundred i ie if in inc indeed interest into is it its itse keep last latter latterly least less ltd made many may me meanwhile might mill mine more moreover most mostly move much must my myse name namely neither never nevertheless next nine no nobody none noone nor not nothing now nowhere of off often on once one only onto or other others otherwise our ours ourselves out over own part per perhaps please put rather re same see seem seemed seeming seems serious several she should show side since sincere six sixty so some somehow someone something sometime sometimes somewhere still such system take ten than that the their them themselves then thence there thereafter thereby therefore therein thereupon these they thick thin third this those though three through throughout thru thus to together too top toward towards twelve twenty two un under until up upon us very via was we well were what whatever when whence whenever where whereafter whereas whereby wherein whereupon wherever whether which while whither who whoever whole whom whose why will with within without would yet you your yours yourself yourselves"
+stop_list= stop_str.split(" ")
+print(stop_list)
+tweets_list_stop=[]
+
+for j in tweets_list_punc:
+  if j not in stop_list:
+    tweets_list_stop.append(j)
+print(tweets_list_stop)
+print(len(tweets_list_stop))
+
+#stemming the words
+#removes the words that are very closely associated with each other 
+s_stemmer = SnowballStemmer(language='english') #setting the language
+tweets_stem=[]
+for word in tweets_list_stop:
+    tweets_stem.append(s_stemmer.stem(word))
+   
+   #count the number of words in the tweets and make a graph
+
+import itertools
+
+tweets_list_count= Counter(tweets_stem)
+print(tweets_list_count)
+
+#converting the dictionary into a list 
+keys= tweets_list_count.keys()
+values= tweets_list_count.values()
+
+#converting the list into a df 
+tweets_df= pd.DataFrame({'count':values,'keywords': keys})
+
+print(tweets_df)
+
+#sending the df over to google sheets 
+from google.colab import auth
+auth.authenticate_user()
+import gspread
+from oauth2client.client import GoogleCredentials as GC
+gc = gspread.authorize(GC.get_application_default())
+# create, and save df
+from gspread_dataframe import set_with_dataframe
+title = 'Twitter Keywords'
+gc.create(title)  # if not exist
+sheet = gc.open(title).sheet1
+set_with_dataframe(sheet, tweets_df) 
+# include_index=False, include_column_header=True, resize=False
