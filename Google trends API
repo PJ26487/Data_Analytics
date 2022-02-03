@@ -1,0 +1,65 @@
+#importing the libraries for running pytrends
+import pandas as pd 
+import pytrends
+from pytrends.request import TrendReq
+
+#sending the df over to google sheets 
+from google.colab import auth
+auth.authenticate_user()
+import gspread
+from oauth2client.client import GoogleCredentials as GC
+gc = gspread.authorize(GC.get_application_default())
+from gspread_dataframe import set_with_dataframe
+
+#create a project
+pytrend= TrendReq()
+pytrends = TrendReq(hl='en-US', tz=360)
+
+#making the categories we need to search for
+
+query = 'minimalist'
+Day= 1
+Day2= Day+7 #the api does not allow for more than a week of gap between the 2 dates
+
+df_months = pd.DataFrame()
+for month in range(1,13):
+  for year in range (15,22):
+    #kw_list creates the request categories to be searched
+    #timeframe is the one list that will be used under a loop
+
+    time_frame = f'20{year}-{month}-{Day} 20{year}-{month}-{Day2}'
+    print(time_frame)
+    pytrend.build_payload(kw_list=[query],cat = 0,timeframe = time_frame)
+
+    #related keywords
+    #not as important but will be a functional addition to the systems
+    related_queries = pytrend.related_queries()
+    related_queries.values()
+
+    #related topics 
+    related_topic = pytrend.related_topics() 
+    #this is a dictionary of dataframes
+    related_topic.values()
+
+    #extracting the topic title from the dict
+
+    topic_1 = related_topic.get(query) #gets the first of 3 nesting dictionaries)
+    topic_rising = topic_1.get('rising') #gets the second 
+    topic_title_rising = topic_rising.get('topic_title') #extracting the fast growing terms 
+    topic_top = topic_1.get('top')
+    #print(topic_top)
+    topic_title_top = topic_top['topic_title'].tolist() #extracting the list of top items in that time period
+    topic_title_top= topic_title_top[:12]
+    #print(topic_title_top)
+    df_months[f'{month}-{year}']= topic_title_top
+
+  #print(df_months)
+  #print(month)
+
+#create, and save df
+from gspread_dataframe import set_with_dataframe
+title = 'Related topics Home Decor Jan 2022_Rugs'
+wb = gc.open(title)
+ws = wb.add_worksheet(f'{query}',200,50) 
+set_with_dataframe(ws, df_months) 
+#include_index=False, include_column_header=True, resize=False
