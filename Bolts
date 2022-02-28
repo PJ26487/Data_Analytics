@@ -1,3 +1,4 @@
+
 #code for generating array of bolt names
 #will try to keep database as simple as we can, any special bolts that arrive in the inventory can be changed accordingly
 #-------------------------------------Array build------------------------------
@@ -41,23 +42,6 @@ print("loop has been updated")
 print("the number of named elements in the database is")
 print(len(bolt_database))
 #--------------------------------exporting data to csv file--------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #the data now needs to be exported to a csv file so that notion can directly extract it and store it in its library
 #If the data needs to be reviewed such as adding a material or adding a different size of bolts to the database
