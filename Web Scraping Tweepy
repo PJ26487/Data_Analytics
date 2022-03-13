@@ -25,9 +25,10 @@ import itertools
 import spacy
 
 #storing the authentication information
-API_key= "jEgP947uP6SjfF6lWiirWpay5"
-API_key_secret= "kUh9bOu8p3QHP4B7EdS7P82kRKrqgrGduxUNoz7U786paqAdMD"
-bearer_token= "AAAAAAAAAAAAAAAAAAAAAEIzWQEAAAAAsSgp7qW3s1C8XxSOn8JTz3hb%2FtI%3D4KKFp81nQpOj823yYtDjc2gJJRK9h9mHElns4DyISGBm9Jpw9Y"
+#enter your own API_key and API_key secret and do not share that with anyone
+API_key= ""
+API_key_secret= ""
+bearer_token= ""
 access_token= "1465192196173221888-eI3hB1NlKnot9Hipd9QxyewirslwHH"
 access_token_secret= "vuziBVx2u5pknnTEB6kQwFrpBooXRj4EgncW2zZVDsniE"
 print("the keys have been saved")
