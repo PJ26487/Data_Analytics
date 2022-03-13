@@ -1,0 +1,46 @@
+#code for finding the highest possible HRA
+import pandas as pd
+import openpyxl 
+
+#fixed entities
+total_income = 100000
+basic = 50000
+HRA = total_income- basic
+
+#i is the basic income
+#j is the rent
+
+min_val =[]
+basic_income=[]
+rent=[]
+corresponding_number=[]
+
+
+
+for i in range (50000,100000,100):
+  for j in range (0,i,100):
+      half_basic= i/2
+      rent_sub= j - 0.1*i
+      HRA = total_income-i
+      k= min(half_basic,rent_sub,HRA)
+      min_val.append(k)
+      basic_income.append(i)
+      rent.append(j)
+
+#did not remember what the k was in this case so named it the minimum value of all the variables
+
+df= pd.DataFrame(list(zip(basic_income,rent,min_val)),columns=['basic','rent','min_val'])
+
+row = min_val.index(max(min_val))
+
+print(df[df.min_val == df.min_val.max()])
+
+#there are 533 possibilities in this case 
+
+#exporting the data to an excel file on the local computer \
+
+#file name 
+file_name= 'AK_HRA'
+
+#exporting file
+df.to_csv(file_name)
