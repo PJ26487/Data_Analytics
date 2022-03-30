@@ -1,0 +1,29 @@
+#using selenium chromedriver to automate web scraping and applying to jobs
+from selenium import webdriver
+from chromedriver_py import binary_path #binary path extracts the location of the package
+from selenium.webdriver.common.keys import Keys
+
+#--------------------------------------extracting the page----------------------------------
+driver = webdriver.Chrome(executable_path=binary_path)
+url = 'https://au.indeed.com/'
+driver.get(url)
+print(driver.title) #getting the title of the page
+
+#--------------------------------------searching for the job-------------------------------
+search_xpath = '//*[(@id = "text-input-what")]'
+search_bar=driver.find_element_by_xpath(search_xpath)
+search_bar.clear()
+search_bar.send_keys('Data Analyst')
+
+location_xpath= '//*[(@id = "text-input-where")]'
+loc_bar= driver.find_element_by_xpath(location_xpath)
+loc_bar.clear()
+loc_bar.send_keys('Australia')
+loc_bar.send_keys(Keys.RETURN)
+driver.implicitly_wait(3)
+#------------------------applying to the job--------------------------------------
+job_xpath = '//*[@id="job_a2820a56d81711bf"]'
+select_button = driver.find_elements_by_xpath(job_xpath)
+print(select_button.get_attribute('href'))
+driver.implicitly_wait(3)
+#------------------------scraping data and storing it in dataframe-----------------
