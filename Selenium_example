@@ -1,0 +1,53 @@
+#using selenium chromedriver
+from selenium import webdriver
+from chromedriver_py import binary_path #binary path extracts the location of the package
+from selenium.webdriver.common.keys import Keys
+
+driver = webdriver.Chrome(executable_path=binary_path)
+
+url='https://www.atlantamarket.com//exhibitor/97991'
+
+driver.get(url) #opens the tab with the url
+button_xpath = '//*[@id="root"]/section/div[4]/div/div/div[1]/div/button'
+elem = driver.find_element_by_xpath(button_xpath)
+elem.click()
+
+wait = webdriver
+
+xpath_button_accept= '//*[@id="gdpr-btn"]'
+
+elem_1 = driver.find_element_by_xpath(xpath_button_accept)
+elem_1.click()
+driver.implicitly_wait(10)
+
+button_xpath = '//*[@id="root"]/section/div[4]/div/div/div[1]/div/button'
+
+elem = driver.find_element_by_xpath(button_xpath)
+print(elem)
+elem.click()
+#stop
+
+driver.implicitly_wait(10)
+elem = driver.find_element_by_xpath(button_xpath)
+elem.click()
+
+#after finding and pressing the element we shall now scrape the information
+#company name
+#address
+#phone number
+#email
+#Address
+
+#xpath_information = '/html/body/div[5]/div/div/div[1]/div/div/div[2]/div/div[1]/p'
+
+#info = driver.find_element_by_xpath(xpath_information)
+
+#print(info)
+
+driver.implicitly_wait(10)
+elem.click()
+
+
+
+
+
