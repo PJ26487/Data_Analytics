@@ -1,0 +1,72 @@
+# importing all the libraries
+import pandas as pd
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from chromedriver_py import binary_path
+headers = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
+import time
+
+# setting up the environment
+driver = webdriver.Chrome(executable_path=binary_path)
+url = 'https://poocoin.appp/ape'
+
+driver.get(url) # opening the url
+driver.implicitly_wait(5)
+# Selecting version 2 on the website
+
+xpath_option_button = '//*[@id="root"]/div/div/div[2]/label/select'
+button_select = driver.find_element_by_xpath(xpath_option_button)
+
+button_select.click()
+button_select.send_keys(Keys.DOWN)
+button_select.send_keys(Keys.RETURN)
+time.sleep(10)
+driver.implicitly_wait(5)
+i = 0
+while i < 1000:
+    # extracting the html code of the website
+    ts = time.time()
+    html = driver.page_source
+    print(html)
+    ts1 = time.time()
+
+    print('time to extract html code:')
+    print(ts1-ts)
+
+    soup = BeautifulSoup(html,'html.parser')
+
+    print(soup)
+
+    table = soup.find_all('tr')
+    print(table)
+
+    token_name_list = []
+    token_code_list = []
+    token_url_list = []
+    creation_time_list =[]
+    contract_list = []
+    holders_list = []
+    bnb_lp_holders_list = []
+
+    # primary key is supposed to be the name and the time created
+    trial = table[1]
+    print(trial)
+
+    for item in table:
+        token_code_tag = soup.find('a',class_='text-light text-small')
+        token_code = token_code_tag.get('href')
+        token_code_list.append(token_code)
+
+
+    print(token_code_list)
+
+    # get the
+    # dataframe can be refreshed after 1 day
+
+
+
+
+
+
+
